@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elevator Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Everything goes within this table. See EpilogJS examples -->
+    <center>
+        <table width="800" class="main-table">
+            <tr>
+                <td>
+                    <div class="table-header">
+                        <h1> Elevator Game </h1>
+                    </div>
+
+                    <div class="table-settings">
+                        <div class="Main Canvas">
+                            <div class="slidecontainer">
+                                <h3> Number of Elevators </h3>
+                                <p id="elevator-num"></p>
+                                <input type="range" min="1" max="20" value="2" class="slider" id="elevator-number-input" oninput="setValue()">
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3> Elevator Speed (m/s) </h3>
+                            <p id="elevator-speed"></p>
+                            <input type="range" min="0.5" max="5" value="1" class="slider" id="elevator-speed-input" oninput="setValue()">
+                        </div>
+
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </center>
+
+
+
+</body>
+
+<script src="script.js"></script>
+
+</html>
