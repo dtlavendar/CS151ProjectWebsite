@@ -9,6 +9,8 @@ Group Project for CS151 Website Implementing Elevator Problem
 - Added scaffolding to website design
 - Added sliders for main design
 - Added basic assets to assets page
+- Added wrappers for findAll, runAction, findOne
+- Added functionality to board and drop people
 
 # Tasks To-Do
 - Set up animation process
@@ -22,12 +24,6 @@ Group Project for CS151 Website Implementing Elevator Problem
   - increment moves(N) on each floor change
   - wire Move Up and Move Down buttons
   - disable buttons when move is illegal
-
-- Board / drop in script.js, maybe website.html
-  - board(P) ->  check can_board(P), remove at(P,F), add inside(P)
-  - drop(P) -> check can_drop(P), remove inside(P), add at(P,F) at elevator floor (any floor, not just destination)
-  - generate board buttons for people waiting on elevator's current floor
-  - generate drop buttons for people inside the elevator
 
 - Logic helpers in script.js
   - runAction(action) -> unified entry point for all player moves
