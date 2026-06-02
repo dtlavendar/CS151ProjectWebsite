@@ -41,6 +41,13 @@ function findAll(result, query) {
 }
 
 /**
+ * gets the first instance of the query and returns the result that it finds. 
+ */
+function findOne(result, query) {
+    return compfindx(result, query, facts, rules);
+}
+
+/**
  * based on whether the action passes a string or an object. if it passes a string, it returns the string. 
  * if it passes an object, it returns the type of the object. if it passes nothing, it returns null.
  */
@@ -60,11 +67,11 @@ function getActionKey(action) {
  */
 function runAction(action) {
     var key = getActionKey(action);
-    var handler = key && ACTION_HANDLERS[key];
-    if (!handler) {
+    var actionFunction = key && ACTION_HANDLERS[key];
+    if (!actionFunction) {
         return {ok:false, reason: "Unvalid action" + key };
     }
-    var outcome = handler(action);
+    var outcome = actionFunction(action);
     if (!outcome.ok) {
         updateUI(outcome);
     }
@@ -85,10 +92,30 @@ var ACTION_HANDLERS = {
         return {ok:true, reason: "Moved down"};
     },
     "board": function(action) {
-        return {ok:true, reason: "Boarded"};
+        var person = action.person;
+        if (!person) {
+            return {ok:false, reason: "No person specified"};
+        }
+        if (!isTrue(seq("can_board", person))) {
+            return {ok:false, reason: "Person cannot board"};
+        }
+        var floor = findOne("F", seq("at", person, "F"));
+        dropfact(seq("at", person, floor), facts);
+        insertfact(seq("inside", person), facts);
+        return {ok:true, reason: "boarded successfully"};
     },
     "drop": function(action) {
-        return {ok:true, reason: "Dropped"};
+        var person = action.person;
+        if (!person) {
+            return {ok:false, reason: "No person specified"};
+        }
+        if (!isTrue(seq("can_drop", person))) {
+            return {ok:false, reason: "Person cannot be dropped off"};
+        }
+        var floor = findOne("F", seq("elevator_at", "F"));
+        dropfact(seq("inside", person), facts);
+        insertfact(seq("at", person, floor), facts);
+        return {ok:true, reason: "dropped off"};
     }
 };
 
