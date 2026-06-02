@@ -62,23 +62,6 @@ function getActionKey(action) {
 }
 
 /**
- * based on the action, it returns the outcome of the action. gives an error if the action is not valid.
- * if the action is valid, it returns the outcome of the action and updates the state.
- */
-function runAction(action) {
-    var key = getActionKey(action);
-    var actionFunction = key && ACTION_HANDLERS[key];
-    if (!actionFunction) {
-        return {ok:false, reason: "Unvalid action" + key };
-    }
-    var outcome = actionFunction(action);
-    if (outcome.ok) {
-        updateUI(outcome);
-    }
-    return outcome;
-}
-
-/**
  * Fills in the dropdown menu with who can board and be dropped off. 
  */
 function fillSelectWithPeople(selectPerson, people) {
@@ -187,6 +170,24 @@ function updateUI(outcome) {
         document.querySelector("#status-message").textContent = inProgressStatus();
     }
 }
+
+/**
+ * based on the action, it returns the outcome of the action. gives an error if the action is not valid.
+ * if the action is valid, it returns the outcome of the action and updates the state.
+ */
+function runAction(action) {
+    var key = getActionKey(action);
+    var actionFunction = key && ACTION_HANDLERS[key];
+    if (!actionFunction) {
+        return {ok:false, reason: "Unvalid action" + key };
+    }
+    var outcome = actionFunction(action);
+    if (outcome.ok) {
+        updateUI(outcome);
+    }
+    return outcome;
+}
+
 
 var ACTION_HANDLERS = {
     "move_up": function(action) {
