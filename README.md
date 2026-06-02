@@ -16,11 +16,6 @@ Group Project for CS151 Website Implementing Elevator Problem
 - Format settings towards bottom
 - Think about making tests
 
-- Logic helpers in script.js
-  - isTrue(query) -> wrapper around compfindp
-  - findAll(result, query) -> wrapper around compfinds
-  - runAction(action) -> unified entry point for all player moves
-
 - Move up / Move down in script.js
   - action handlers that check can_move_up / can_move_down
   - update elevator_at(F) facts (remove old, add new)
@@ -33,6 +28,9 @@ Group Project for CS151 Website Implementing Elevator Problem
   - drop(P) -> check can_drop(P), remove inside(P), add at(P,F) at elevator floor (any floor, not just destination)
   - generate board buttons for people waiting on elevator's current floor
   - generate drop buttons for people inside the elevator
+
+- Logic helpers in script.js
+  - runAction(action) -> unified entry point for all player moves
 
 - Render game & win state in script.js & website.html
   - fill #building with floor list (top to bottom)
