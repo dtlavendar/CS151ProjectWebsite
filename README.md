@@ -11,22 +11,14 @@ Group Project for CS151 Website Implementing Elevator Problem
 - Added basic assets to assets page
 - Added wrappers for findAll, runAction, findOne
 - Added functionality to board and drop people
+- Added wiring and action for moving up and down
+- Created runAction(action)
 
 # Tasks To-Do
 - Set up animation process
 - Create logic program with basic variables
 - Format settings towards bottom
 - Think about making tests
-
-- Move up / Move down in script.js
-  - action handlers that check can_move_up / can_move_down
-  - update elevator_at(F) facts (remove old, add new)
-  - increment moves(N) on each floor change
-  - wire Move Up and Move Down buttons
-  - disable buttons when move is illegal
-
-- Logic helpers in script.js
-  - runAction(action) -> unified entry point for all player moves
 
 - Render game & win state in script.js & website.html
   - fill #building with floor list (top to bottom)
@@ -40,6 +32,7 @@ Group Project for CS151 Website Implementing Elevator Problem
    - named preset puzzles (eg : 4-floor, 3-person example)
    - reset button to restart current puzzle
    - pick start/destination per person (optional? i think?)
+   - create start message?
  
  - Styling in style.css
    - layout for building / floors / elevator
