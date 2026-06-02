@@ -72,15 +72,119 @@ function runAction(action) {
         return {ok:false, reason: "Unvalid action" + key };
     }
     var outcome = actionFunction(action);
-    if (!outcome.ok) {
+    if (outcome.ok) {
         updateUI(outcome);
     }
     return outcome;
 }
 
-function updateUI(outcome) {
-    if (outcome.ok) {
+/**
+ * Fills in the dropdown menu with who can board and be dropped off. 
+ */
+function fillSelectWithPeople(selectPerson, people) {
+    var option;
+    var i;
+
+    selectPerson.innerHTML = "";
+
+    if (people.length === 0) {
+        option = document.createElement('option');
+        option.value = "";
+        option.textContent = "(no one)";
+        selectPerson.appendChild(option);
+        selectPerson.disabled = true;
         return;
+    }
+
+    selectPerson.disabled = false;
+
+    for (i = 0; i < people.length; i++) {
+        option = document.createElement('option');
+        option.value = people[i];
+        option.textContent = people[i];
+        selectPerson.appendChild(option);
+    }
+}
+
+/**
+ * provides the list of who can be boarded and dropped off.
+ */
+function updatePassengerList() {
+    var people_canboard = findAll("P", seq("can_board", "P"));
+    var people_candrop = findAll("P", seq("can_drop", "P"));
+
+    var boardPerson = document.getElementById("board-action");
+    var dropPerson = document.getElementById("drop-action");
+
+    fillSelectWithPeople(boardPerson, people_canboard, "no one");
+    fillSelectWithPeople(dropPerson, people_candrop, "no one");
+
+    var boardButton = document.getElementById("board-button");
+    var dropButton = document.getElementById("drop-button");
+    if (people_canboard.length === 0) {
+        boardButton.disabled = true;
+    }
+    if (people_candrop.length === 0) {
+        dropButton.disabled = true;
+    }
+}
+
+/**
+ * Will board a person
+ */
+function helpBoard() {
+    var person = document.getElementById("board-action").value;
+    if (person) {
+        runAction({type: "board", person: person});
+    }
+}
+
+/**
+ * Will drop off a person
+ */
+function helpDrop() {
+    var person = document.getElementById("drop-action").value;
+    if (person) {
+        runAction({type: "drop", person: person});
+    }
+}
+
+/**
+ * detects the drop or board button being clicked and will either board or drop off a person
+ * depending on the button clicked.
+ */
+function wireDropBoardControl() {
+    document.querySelector("#board-button").addEventListener("click", helpBoard);
+    document.querySelector("#drop-button").addEventListener("click", helpDrop);
+}
+
+function inProgressStatus() {
+    var floor = findOne("F", seq("elevator_at", "F"));
+    var peopleInElevator = findAll("P", seq("inside", "P"));
+    var capacity = findOne("C", seq("capacity", "C"));
+    var moves = findOne("N", seq("moves", "N"));
+
+    if (peopleInElevator.length === 1) {
+        return "Elevator at floor " + floor + " with " + peopleInElevator.length + " person onboard (out of " 
+        + capacity + " possible). | # of moves: " + moves;        
+    }
+    else {
+        return "Elevator at floor " + floor + " with " + peopleInElevator.length + " people (out of " 
+    + capacity + " possible). | # of moves: " + moves;
+    }
+}
+
+function updateUI(outcome) {
+    if (!outcome.ok) {
+        return;
+    }
+
+    updatePassengerList();
+
+    if (isTrue("solved")) {
+        document.querySelector("#status-message").textContent = "Congratulations! You solved the puzzle!";
+    } else {
+        document.querySelector("#status-message").textContent = inProgressStatus();
     }
 }
 
@@ -132,6 +236,7 @@ function init() {
     document.querySelector("#btn-start-puzzle").addEventListener("click", loadPuzzle);
     setValue();
     loadPuzzle();
+    wireDropBoardControl();
 }
 
 document.addEventListener("DOMContentLoaded", init);
@@ -225,6 +330,7 @@ function loadPuzzle() {
 
     document.querySelector("#move-count").textContent = "0";
     sanityCheck(floorCount, capacity, personCount);
+    updatePassengerList();
 }
 
 // for debugging purposes
