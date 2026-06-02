@@ -21,14 +21,14 @@ Group Project for CS151 Website Implementing Elevator Problem
   - findAll(result, query) -> wrapper around compfinds
   - runAction(action) -> unified entry point for all player moves
 
--   Move up / Move down in script.js
+- Move up / Move down in script.js
   - action handlers that check can_move_up / can_move_down
   - update elevator_at(F) facts (remove old, add new)
   - increment moves(N) on each floor change
   - wire Move Up and Move Down buttons
   - disable buttons when move is illegal
 
--  Board / drop in script.js, maybe website.html
+- Board / drop in script.js, maybe website.html
   - board(P) ->  check can_board(P), remove at(P,F), add inside(P)
   - drop(P) -> check can_drop(P), remove inside(P), add at(P,F) at elevator floor (any floor, not just destination)
   - generate board buttons for people waiting on elevator's current floor
