@@ -1,10 +1,72 @@
 body {
-    background-color: #f0f0f0;
-    font-family: Arial, sans-serif;
+    background-color: #aabbbb;
+    font-family: Times, "Times New Roman", serif;
     margin: 0;
-    padding: 0;
 }
 
 .main-table {
     background-color: #ffffff;
+    border-collapse: collapse;
+}
+
+/* ==========================================================================
+   New simple prototype layout, kept close to the Epilog table template
+   ========================================================================== */
+
+.building {
+    display: none;
+    margin-top: 8px;
+    text-align: center;
+}
+
+.building.is-visible {
+    display: block;
+}
+
+#floor-canvas {
+    border: 1px solid #000000;
+    max-width: 100%;
+}
+
+.game-status,
+.controls,
+.table-settings {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.controls button,
+.controls select {
+    background-color: #eee;
+    border: 1px solid #666;
+    cursor: pointer;
+    font-family: Times, "Times New Roman", serif;
+    margin: 3px;
+    padding: 2px 8px;
+}
+
+.controls button:disabled,
+.controls select:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.table-settings {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.slidecontainer {
+    width: 160px;
+}
+
+.slidecontainer h3,
+.slidecontainer p {
+    margin: 4px 0;
+}
+
+.slider {
+    width: 100%;
 }

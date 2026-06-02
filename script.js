@@ -1,3 +1,4 @@
+
 var facts = [];
 var rules = [];
 
@@ -190,6 +191,176 @@ function inProgressStatus() {
     }
 }
 
+//==============================================================================
+// Handling Canvas Elevator Functionality
+//==============================================================================
+
+var canvasStarted = false;
+
+/**
+ * Collects each person's current location and destination for the canvas.
+ * Those inside the elevator have a pending at(P,F) fact until they are dropped.
+ */
+function getPeopleForCanvas() {
+    var people = findAll("P", seq("person", "P"));
+    var personInfo = [];
+    var person;
+    var current;
+    var destination;
+    var inside;
+    var i;
+
+    for (i = 0; i < people.length; i++) {
+        person = people[i];
+        inside = isTrue(seq("inside", person));
+        current = inside ? "" : findOne("F", seq("at", person, "F"));
+        destination = findOne("W", seq("wants", person, "W"));
+
+        personInfo.push({
+            name: person,
+            current: current,
+            destination: destination,
+            inside: inside,
+            done: !inside && current === destination
+        });
+    }
+
+    return personInfo;
+}
+
+/**
+ * Shows the canvas and draws floor circles connected like a simple elevator map.
+ * This reads from the same Epilog facts that drive the existing buttons.
+ */
+function drawElevatorCanvas() {
+    var canvas = document.querySelector("#floor-canvas");
+    var building = document.querySelector("#building");
+    var ctx;
+    var floorCount = Number(findOne("T", seq("top", "T")));
+    var currentFloor = Number(findOne("F", seq("elevator_at", "F")));
+    var people = getPeopleForCanvas();
+    var peopleByFloor = {};
+    var elevatorPeople = [];
+    var x = 120;
+    var topY = 35;
+    var bottomY = 240;
+    var gap = floorCount > 1 ? (bottomY - topY) / (floorCount - 1) : 0;
+    var floor;
+    var y;
+    var i;
+
+    if (!canvas || !canvas.getContext) {
+        return;
+    }
+
+    building.classList.add("is-visible");
+    ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ctx.strokeStyle = "#888";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x, topY);
+    ctx.lineTo(x, bottomY);
+    ctx.stroke();
+
+    for (i = 0; i < people.length; i++) {
+        if (people[i].inside) {
+            elevatorPeople.push(people[i]);
+        } else {
+            if (!peopleByFloor[people[i].current]) {
+                peopleByFloor[people[i].current] = [];
+            }
+            peopleByFloor[people[i].current].push(people[i]);
+        }
+    }
+
+    for (floor = 1; floor <= floorCount; floor++) {
+        y = bottomY - ((floor - 1) * gap);
+        drawFloorNode(ctx, floor, currentFloor, x, y);
+        drawPeopleLabel(ctx, peopleByFloor[floor] || [], x + 105, y + 4);
+        if (floor === currentFloor) {
+            drawElevatorPeopleLabel(ctx, elevatorPeople, x + 105, y + 20);
+        }
+    }
+}
+
+/**
+ * Draws one floor circle. The active elevator floor is intentionally simple:
+ * a yellow fill and light glow so the current level is easy to see.
+ */
+function drawFloorNode(ctx, floor, currentFloor, x, y) {
+    var active = floor === currentFloor;
+
+    ctx.save();
+    ctx.shadowBlur = active ? 12 : 0;
+    ctx.shadowColor = active ? "#e8d44f" : "transparent";
+    ctx.beginPath();
+    ctx.arc(x, y, 13, 0, Math.PI * 2);
+    ctx.fillStyle = active ? "#f3df55" : "#ffffff";
+    ctx.fill();
+    ctx.strokeStyle = "#333333";
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.fillStyle = "#222222";
+    ctx.font = "13px Times, Times New Roman, serif";
+    ctx.fillText("Floor " + floor, x + 24, y + 4);
+}
+
+function drawPeopleLabel(ctx, people, x, y) {
+    if (people.length === 0) {
+        return;
+    }
+
+    ctx.fillStyle = "#000066";
+    ctx.font = "13px Times, Times New Roman, serif";
+    ctx.fillText(formatPeopleList(people, 3), x, y);
+}
+
+function formatPersonLabel(person) {
+    if (person.done) {
+        return person.name + " done";
+    }
+    return person.name + " -> " + person.destination;
+}
+
+function drawElevatorPeopleLabel(ctx, people, x, y) {
+    if (people.length === 0) {
+        return;
+    }
+
+    ctx.fillStyle = "#000000";
+    ctx.font = "13px Times, Times New Roman, serif";
+    ctx.fillText("Elevator: " + formatPeopleList(people, 3), x, y);
+}
+
+function formatPeopleList(people, limit) {
+    var labels = [];
+    var i;
+
+    for (i = 0; i < people.length && i < limit; i++) {
+        labels.push(formatPersonLabel(people[i]));
+    }
+
+    if (people.length > limit) {
+        labels.push("+" + (people.length - limit) + " more");
+    }
+
+    return labels.join(", ");
+}
+// Finish Canvas Functionality
+//
+//
+
+
+
+function startPuzzle() {
+    canvasStarted = true;
+    loadPuzzle();
+    drawElevatorCanvas();
+}
+
 /**
  * updates the UI 
  */
@@ -200,11 +371,17 @@ function updateUI(outcome) {
     disableMoveButtons();
 
     updatePassengerList();
+    document.querySelector("#move-count").textContent = findOne("N", seq("moves", "N"));
 
     if (isTrue("solved")) {
         document.querySelector("#status-message").textContent = "Congratulations! You solved the puzzle!";
     } else {
         document.querySelector("#status-message").textContent = inProgressStatus();
+    }
+
+    // we're calling the canvas here
+    if (canvasStarted) {
+        drawElevatorCanvas();
     }
 }
 
@@ -297,9 +474,8 @@ var viewRulesText =
 
 function init() {
     // initializes the program, runs once page loads.
-    document.querySelector("#btn-start-puzzle").addEventListener("click", loadPuzzle);
+    document.querySelector("#btn-start-puzzle").addEventListener("click", startPuzzle);
     setValue();
-    loadPuzzle();
     disableMoveButtons();
     wireDropBoardControl();
     wireMoveButtons();
@@ -314,8 +490,6 @@ function resetProgram() {
 }
 
 function setValue() {
-    document.querySelector("#elevator-num").textContent =
-        document.querySelector("#elevator-number-input").value;
     document.querySelector("#floor-count-label").textContent =
         document.querySelector("#floor-count").value;
     document.querySelector("#capacity-label").textContent =
@@ -397,6 +571,10 @@ function loadPuzzle() {
     document.querySelector("#move-count").textContent = "0";
     sanityCheck(floorCount, capacity, personCount);
     updatePassengerList();
+    disableMoveButtons();
+    if (canvasStarted) {
+        drawElevatorCanvas();
+    }
 }
 
 // for debugging purposes

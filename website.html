@@ -11,21 +11,58 @@
 
     <!-- Everything goes within this table. See EpilogJS examples -->
     <center>
-        <table width="800" class="main-table">
+        <table width="800" cellspacing="0" cellpadding="0" bgcolor="#ffffff" class="main-table">
             <tr>
                 <td>
-                    <div class="table-header">
-                        <h1> Elevator Game </h1>
-                        <p class="subtitle">Move everyone to their destination in as few unit trips as possible.</p>
+                    <table width="800" height="100" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td align="center" valign="center">
+                                <span style="font-size:36px">Elevator Game</span><br/>
+                                <span>Move everyone to their destination in as few unit trips as possible.</span>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- ======================================================================
+                         New simple elevator drawing area
+                         ====================================================================== -->
+                    <center>
+                        <br/>
+                        <table width="640" cellpadding="8" cellspacing="0" bgcolor="#f4f8f8" border="1">
+                            <tr>
+                                <td align="center">
+                                    <div id="game-status" class="game-status">
+                                        Moves: <span id="move-count">0</span><br/>
+                                        <span id="status-message"> Click "Start Puzzle" to begin. </span>
+                                    </div>
+                                    <div id="building" class="building">
+                                        <canvas id="floor-canvas" width="600" height="280"></canvas>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </center>
+
+                    <div class="controls">
+                        <button type="button" id="btn-start-puzzle">Start Puzzle</button>
+                        <button type="button" id="btn-move-up">Move Up</button>
+                        <button type="button" id="btn-move-down">Move Down</button>
                     </div>
 
-                    <div class="table-settings">
-                        <div class="slidecontainer">
-                            <h3>Number of Elevators</h3>
-                            <p id="elevator-num">1</p>
-                            <input type="range" min="1" max="1" value="1" class="slider" id="elevator-number-input" oninput="setValue()">
-                        </div>
+                    <div id="passenger-actions" class="controls">
+                        <label for = "board-action">Person:</label>
+                        <select id = "board-action"></select>
+                        <button type = "button" id = "board-button">Board</button>
 
+                        <label for = "drop-action">Person:</label>
+                        <select id = "drop-action"></select>
+                        <button type = "button" id = "drop-button">Drop</button>
+                    </div>
+
+                    <!-- ======================================================================
+                         New bottom settings area
+                         ====================================================================== -->
+                    <div class="table-settings">
                         <div class="slidecontainer">
                             <h3>Floors</h3>
                             <p id="floor-count-label">4</p>
@@ -43,31 +80,6 @@
                             <p id="person-count-label">3</p>
                             <input type="range" min="1" max="10" value="3" class="slider" id="person-count" oninput="setValue()">
                         </div>
-
-                        <button type="button" id="btn-start-puzzle">Start Puzzle</button>
-                    </div>
-
-                    <div id="game-status" class="game-status">
-                        <p>Moves: <span id="move-count">0</span></p>
-                        <p id="status-message"> In progress </p>
-                    </div>
-
-                    <!-- JS will draw each floor, waiting people, and elevator here -->
-                    <div id="building" class="building"></div>
-
-                    <div id="elevator-controls" class="controls">
-                        <button type="button" id="btn-move-up">Move Up</button>
-                        <button type="button" id="btn-move-down">Move Down</button>
-                    </div>
-
-                    <div id="passenger-actions" class="controls">
-                        <label for = "board-action">Person:</label>
-                        <select id = "board-action"></select>
-                        <button type = "button" id = "board-button">Board</button>
-
-                        <label for = "drop-action">Person:</label>
-                        <select id = "drop-action"></select>
-                        <button type = "button" id = "drop-button">Drop</button>
                     </div>
 
                 </td>

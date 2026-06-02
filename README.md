@@ -13,15 +13,16 @@ Group Project for CS151 Website Implementing Elevator Problem
 - Added functionality to board and drop people
 - Added wiring and action for moving up and down
 - Created runAction(action)
+- Added simple canvas prototype with connected floor circles
+- Moved puzzle sliders to the bottom of the table layout
 
 # Tasks To-Do
 - Set up animation process
 - Create logic program with basic variables
-- Format settings towards bottom
 - Think about making tests
 
 - Render game & win state in script.js & website.html
-  - fill #building with floor list (top to bottom)
+  - keep #building as a simple connected-circle elevator sketch
   - show waiting people, onboard passengers, elevator position
   - show each person's destination (wants)
   - update #move-count from moves(N) fact after each action
