@@ -16,33 +16,43 @@
                 <td>
                     <div class="table-header">
                         <h1> Elevator Game </h1>
+                        <p class="subtitle">Move everyone to their destination in as few unit trips as possible.</p>
                     </div>
 
                     <div class="table-settings">
-                        <div class="Main Canvas">
-                            <div class="slidecontainer">
-                                <h3> Number of Elevators </h3>
-                                <p id="elevator-num"></p>
-                                <input type="range" min="1" max="20" value="2" class="slider" id="elevator-number-input" oninput="setValue()">
-                            </div>
+                        <div class="slidecontainer">
+                            <h3> Number of Elevators </h3>
+                            <p id="elevator-num">1</p>
+                            <input type="range" min="1" max="1" value="1" class="slider" id="elevator-number-input" oninput="setValue()">
                         </div>
-
-                        <div>
-                            <h3> Elevator Speed (m/s) </h3>
-                            <p id="elevator-speed"></p>
-                            <input type="range" min="0.5" max="5" value="1" class="slider" id="elevator-speed-input" oninput="setValue()">
-                        </div>
-
                     </div>
+
+                    <div id="game-status" class="game-status">
+                        <p>Moves: <span id="move-count">0</span></p>
+                        <p id="status-message"> In progress </p>
+                    </div>
+
+                    <div id="building" class="building">
+                        <!-- Floors, waiting people, and elevator position here -->
+                    </div>
+
+                    <div id="elevator-controls" class="controls">
+                        <button type="button" id="btn-move-up">Move Up</button>
+                        <button type="button" id="btn-move-down">Move Down</button>
+                    </div>
+
+                    <div id="passenger-actions" class="controls">
+                        <!-- Board and drop buttons here -->
+                    </div>
+
                 </td>
             </tr>
         </table>
     </center>
 
-
-
 </body>
 
+<script src="epilog-scripts/epilog.js"></script>
 <script src="script.js"></script>
 
 </html>

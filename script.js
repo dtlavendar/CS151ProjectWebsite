@@ -14,14 +14,14 @@ function resetProgram() {
 
 
 function setValue() {
-    /* This function handles the paragraphs that change with user sliders. */
+    // single-elevator puzzle: slider is fixed at 1.
     resetProgram();
 
     var num = document.querySelector("#elevator-number-input").value.toString();
     document.querySelector("#elevator-num").textContent = num;
 
-    var speed = document.querySelector("#elevator-speed-input").value.toString();
-    document.querySelector("#elevator-speed").textContent = speed;
+    // var speed = document.querySelector("#elevator-speed-input").value.toString();
+    // document.querySelector("#elevator-speed").textContent = speed;
 }
 
 
