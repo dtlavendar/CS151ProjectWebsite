@@ -21,6 +21,77 @@ function prepareTheory(theory) {
     return theory;
 }
 
+//==============================================================================
+// Logic helpers — Epilog-facing API (merge anchor: keep this section intact)goes until viewRulesText
+//==============================================================================
+
+/**
+ * returns true if query is true given the current facts and rules
+ */
+function isTrue(query) {
+    return compfindp(query, facts, rules);
+}
+
+/**
+ * takes in an expression, a sentence, a dataset, and a ruleset and returns all instances of the query
+ * if none it retunrs []
+ */
+function findAll(result, query) {
+    return compfinds(result, query, facts, rules);
+}
+
+/**
+ * based on whether the action passes a string or an object. if it passes a string, it returns the string. 
+ * if it passes an object, it returns the type of the object. if it passes nothing, it returns null.
+ */
+function getActionKey(action) {
+    if (typeof action === "string") {
+        return action;
+    }
+    if (action && typeof action.type === "string") {
+        return action.type;
+    }
+    return null;
+}
+
+/**
+ * based on the action, it returns the outcome of the action. gives an error if the action is not valid.
+ * if the action is valid, it returns the outcome of the action and updates the state.
+ */
+function runAction(action) {
+    var key = getActionKey(action);
+    var handler = key && ACTION_HANDLERS[key];
+    if (!handler) {
+        return {ok:false, reason: "Unvalid action" + key };
+    }
+    var outcome = handler(action);
+    if (!outcome.ok) {
+        updateUI(outcome);
+    }
+    return outcome;
+}
+
+function updateUI(outcome) {
+    if (outcome.ok) {
+        return;
+    }
+}
+
+var ACTION_HANDLERS = {
+    "move_up": function(action) {
+        return {ok:true, reason: "Moved up"};
+    },
+    "move_down": function(action) {
+        return {ok:true, reason: "Moved down"};
+    },
+    "board": function(action) {
+        return {ok:true, reason: "Boarded"};
+    },
+    "drop": function(action) {
+        return {ok:true, reason: "Dropped"};
+    }
+};
+
 var viewRulesText =
     'done(P) :- at(P,F) & wants(P,F).\n' +
     'can_move_up :- elevator_at(F) & top(T) & less(F,T).\n' +
