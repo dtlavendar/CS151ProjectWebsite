@@ -41,4 +41,8 @@ Group Project for CS151 Website Implementing Elevator Problem
    - instructions?    
 
 # Current Website Design
-<img width="1502" height="1011" alt="Screenshot 2026-05-27 at 5 59 51 PM" src="https://github.com/user-attachments/assets/e7ea80b6-b1d4-4538-adfe-0edb603d79c0" />
+
+
+https://github.com/user-attachments/assets/173ff81c-951c-4e79-ac37-a58df644f41d
+
+
