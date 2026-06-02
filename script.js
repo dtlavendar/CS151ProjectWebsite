@@ -106,9 +106,13 @@ function updatePassengerList() {
     var dropButton = document.getElementById("drop-button");
     if (people_canboard.length === 0) {
         boardButton.disabled = true;
+    } else {
+        boardButton.disabled = false;
     }
     if (people_candrop.length === 0) {
         dropButton.disabled = true;
+    } else {
+        dropButton.disabled = false;
     }
 }
 
@@ -141,6 +145,35 @@ function wireDropBoardControl() {
     document.querySelector("#drop-button").addEventListener("click", helpDrop);
 }
 
+
+/**
+ * disables the move buttons if the elevator is at the top or bottom floor.
+ */
+function disableMoveButtons(){
+    var currentFloor = findOne("F", seq("elevator_at", "F"));
+    var topFloor = findOne("T", seq("top", "T"));
+    var bottomFloor = findOne("B", seq("bottom", "B"));
+    if (currentFloor === topFloor) {
+        document.querySelector("#btn-move-up").disabled = true;
+    } else {
+        document.querySelector("#btn-move-up").disabled = false;
+    }
+    if (currentFloor === bottomFloor) {
+        document.querySelector("#btn-move-down").disabled = true;
+    } else {
+        document.querySelector("#btn-move-down").disabled = false;
+    }
+}
+
+function wireMoveButtons(){
+    document.querySelector("#btn-move-up").addEventListener("click", function() { runAction("move_up"); });
+    document.querySelector("#btn-move-down").addEventListener("click", function() { runAction("move_down"); });
+    disableMoveButtons();
+}
+
+/**
+* Returns a message with the current status of the game.
+*/
 function inProgressStatus() {
     var floor = findOne("F", seq("elevator_at", "F"));
     var peopleInElevator = findAll("P", seq("inside", "P"));
@@ -157,10 +190,14 @@ function inProgressStatus() {
     }
 }
 
+/**
+ * updates the UI 
+ */
 function updateUI(outcome) {
     if (!outcome.ok) {
         return;
     }
+    disableMoveButtons();
 
     updatePassengerList();
 
@@ -191,10 +228,36 @@ function runAction(action) {
 
 var ACTION_HANDLERS = {
     "move_up": function(action) {
-        return {ok:true, reason: "Moved up"};
+        var floor = Number(findOne("FLOORNUM", seq("elevator_at", "FLOORNUM")))
+        if (floor === Number(findOne("TOP", seq("top", "TOP")))) {
+            return {ok:false, reason: "Already at top floor"};
+        }
+        var newFloor = floor + 1;
+
+        dropfact(seq("elevator_at", floor.toString()), facts);
+        insertfact(seq("elevator_at", newFloor.toString()), facts);
+
+        var moves = findOne("MOVENUM", seq("moves", "MOVENUM"));
+        dropfact(seq("moves", moves), facts);
+        insertfact(seq("moves", (Number(moves) + 1).toString()), facts);
+        
+        return {ok:true, reason: "Went up to floor " + newFloor};
     },
     "move_down": function(action) {
-        return {ok:true, reason: "Moved down"};
+        var floor = findOne("FLOORNUM", seq("elevator_at", "FLOORNUM"));
+        if (floor === findOne("BASEFLOOR", seq("bottom", "BASEFLOOR"))) {
+            return {ok:false, reason: "Already at bottom floor"};
+        }
+        var newFloor = Number(floor) - 1;
+        dropfact(seq("elevator_at", floor), facts);
+        insertfact(seq("elevator_at", newFloor.toString()), facts);
+
+
+        var moves = findOne("MOVENUM", seq("moves", "MOVENUM"));
+        dropfact(seq("moves", moves), facts);
+        insertfact(seq("moves", Number(moves) + 1), facts);
+
+        return {ok:true, reason: "Went down to floor " + newFloor};
     },
     "board": function(action) {
         var person = action.person;
@@ -237,7 +300,9 @@ function init() {
     document.querySelector("#btn-start-puzzle").addEventListener("click", loadPuzzle);
     setValue();
     loadPuzzle();
+    disableMoveButtons();
     wireDropBoardControl();
+    wireMoveButtons();
 }
 
 document.addEventListener("DOMContentLoaded", init);
