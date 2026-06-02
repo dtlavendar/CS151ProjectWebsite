@@ -21,10 +21,30 @@
 
                     <div class="table-settings">
                         <div class="slidecontainer">
-                            <h3> Number of Elevators </h3>
+                            <h3>Number of Elevators</h3>
                             <p id="elevator-num">1</p>
                             <input type="range" min="1" max="1" value="1" class="slider" id="elevator-number-input" oninput="setValue()">
                         </div>
+
+                        <div class="slidecontainer">
+                            <h3>Floors</h3>
+                            <p id="floor-count-label">4</p>
+                            <input type="range" min="2" max="10" value="4" class="slider" id="floor-count" oninput="setValue()">
+                        </div>
+
+                        <div class="slidecontainer">
+                            <h3>Capacity</h3>
+                            <p id="capacity-label">2</p>
+                            <input type="range" min="1" max="5" value="2" class="slider" id="capacity" oninput="setValue()">
+                        </div>
+
+                        <div class="slidecontainer">
+                            <h3>People</h3>
+                            <p id="person-count-label">3</p>
+                            <input type="range" min="1" max="10" value="3" class="slider" id="person-count" oninput="setValue()">
+                        </div>
+
+                        <button type="button" id="btn-start-puzzle">Start Puzzle</button>
                     </div>
 
                     <div id="game-status" class="game-status">
@@ -32,9 +52,8 @@
                         <p id="status-message"> In progress </p>
                     </div>
 
-                    <div id="building" class="building">
-                        <!-- Floors, waiting people, and elevator position here -->
-                    </div>
+                    <!-- JS will draw each floor, waiting people, and elevator here -->
+                    <div id="building" class="building"></div>
 
                     <div id="elevator-controls" class="controls">
                         <button type="button" id="btn-move-up">Move Up</button>
