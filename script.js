@@ -255,7 +255,7 @@ var ACTION_HANDLERS = {
 
         var moves = findOne("MOVENUM", seq("moves", "MOVENUM"));
         dropfact(seq("moves", moves), facts);
-        insertfact(seq("moves", Number(moves) + 1), facts);
+        insertfact(seq("moves", (Number(moves) + 1).toString()), facts);
 
         return {ok:true, reason: "Went down to floor " + newFloor};
     },
